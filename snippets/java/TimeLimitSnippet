@@ -1,0 +1,29 @@
+public class TimeLimitSnippet {
+    @Bean
+    public TimeoutConfig timeoutConfig() {
+        return TimeoutConfig.custom()
+            .timeoutDuration(Duration.ofMillis(1000))
+            .build();
+    }
+
+    @Bean
+    public TimeoutRegistry timeoutRegistry(TimeoutConfig timeoutConfig) {
+        return TimeoutRegistry.of(timeoutConfig);
+    }
+
+    @Bean
+    public Timeout timeout(TimeoutRegistry timeoutRegistry) {
+        return FeignTimeout.of(timeoutRegistry);
+    }
+
+    @Timeout(name = "userTimeout", fallbackMethod = "getUserFallbackAsync")
+    @GetMapping("/users/{id}/timeout")
+    public ResponseEntity<Object> getUserWithTimeout(@PathVariable long id) {
+        return userService.getUser(id);
+    }
+
+    @GetMapping("/users/{id}/timeout")
+    @Timeout(name = "userTimeout", fallbackMethod = "getUserFallback")
+    ResponseEntity<Object> getUserWithTimeout(@PathVariable long id);
+
+}
