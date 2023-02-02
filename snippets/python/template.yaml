@@ -1,0 +1,10 @@
+template:
+    provider:
+        azure:
+            module:
+        gcp:
+            module:
+        aws:
+            module:
+    core:
+        modeule:
